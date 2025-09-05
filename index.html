@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prem Prakash Showcase</title>
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0b0d1a;
+      color: #fff;
+      line-height: 1.6;
+    }
+    h1, h2 { text-align: center; }
+    .highlight { color: #ec4899; font-weight: bold; }
+    .card {
+      background: #1b1f38;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 16px;
+      max-width: 900px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    /* Loader Screen */
+    #loader {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #0b0d1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 2000;
+      color: #fff;
+      font-size: 1.5em;
+      font-weight: bold;
+      transition: opacity 1s ease, visibility 1s ease;
+    }
+    .spinner {
+      border: 6px solid #222;
+      border-top: 6px solid #ec4899;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    #loader.fade-out { opacity: 0; visibility: hidden; }
+
+    /* Navigation Bar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      background: #111;
+      padding: 12px 0;
+      z-index: 1000;
+      border-bottom: 2px solid #333;
+    }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1em;
+      transition: color 0.3s;
+    }
+    .navbar a:hover { color: #ec4899; }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(270deg, #8b5cf6, #ec4899, #facc15, #34d399);
+      background-size: 800% 800%;
+      animation: gradientMove 12s ease infinite;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #0b0d1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: #fff;
+      margin: 0 auto 15px;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      background: #8b5cf6;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn:hover { background: #ec4899; }
+
+    /* Certificate Section */
+    .certificate-container {
+      position: relative;
+      display: inline-block;
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .certificate-container img {
+      width: 100%;
+      max-width: 1000px;
+      display: block;
+    }
+    .name-text {
+      position: absolute;
+      top: 38%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 3em;
+      font-weight: bold;
+      color: #144657;
+      letter-spacing: 1px;
+    }
+
+    /* Games Section */
+    .game-embed { margin: 30px 0; text-align: center; }
+    .game-embed iframe {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111;
+      margin-top: 20px;
+      border-top: 2px solid #333;
+      font-size: 0.9em;
+    }
+
+    /* Back to Top Button */
+    #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #8b5cf6;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5em;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      display: none;
+      transition: all 0.3s ease;
+    }
+    #backToTop:hover { background: #ec4899; }
+
+    /* Music Player */
+    .music-player {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      background: #111;
+      border: 2px solid #333;
+      border-radius: 50px;
+      padding: 8px 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    #musicToggle {
+      background: #8b5cf6;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 1.2em;
+      cursor: pointer;
+      color: #fff;
+      transition: background 0.3s;
+    }
+    #musicToggle:hover { background: #ec4899; }
+
+    /* Cursor Particle Effect */
+    .cursor-particle {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fadeOut 1s forwards;
+      z-index: 1500;
+    }
+    @keyframes fadeOut {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(2); }
+    }
+
+    /* Surprise Popup */
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: #1b1f38;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #ec4899;
+      text-align: center;
+      display: none;
+      z-index: 3000;
+      animation: popIn 0.5s ease forwards;
+    }
+    #popup h2 {
+      margin: 0 0 10px;
+      color: #facc15;
+    }
+    #popup p {
+      margin: 0 0 15px;
+      font-size: 1.2em;
+      color: #fff;
+    }
+    #popup button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #ec4899;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #popup button:hover { background: #8b5cf6; }
+    @keyframes popIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* Smooth Scroll */
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="spinner"></div>
+    <p>Loading Anime World... ✨</p>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+      <li><a href="#certificate">Certificate</a></li>
+      <li><a href="#games">Games</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="logo">P</div>
+    <h1>Hi Ruchika ✨</h1>
+    <p>Welcome to my little coding + anime world 💻🎌</p>
+  </header>
+
+  <!-- About Section -->
+  <section id="about" class="card">
+    <h2>About Me</h2>
+    <p>Hey, I’m <b>Prem Prakash</b> – I love <span class="highlight">coding</span>, 
+    <span class="highlight">anime</span>, and creating fun projects.  
+    This page is just a small surprise for you 🌸</p>
+  </section>
+
+  <!-- Quiz Section -->
+  <section id="quiz" class="card">
+    <h2>Mini Quiz for You 🎮</h2>
+    <form id="quizForm">
+      <label>What’s my favorite vibe?  
+        <select name="vibe">
+          <option value="">— choose —</option>
+          <option>Anime</option>
+          <option>Cricket</option>
+          <option>Coding</option>
+        </select>
+      </label><br><br>
+      <label>Your energy drink choice: <input name="drink" /></label><br><br>
+      <button class="btn" type="submit">Check Answer</button>
+      <p id="quiz-result"></p>
+    </form>
+  </section>
+
+  <!-- Certificate Section -->
+  <section id="certificate" class="card">
+    <h2>My Certificate 🏅</h2>
+    <div class="certificate-container">
+      <img src="certificate-template.png" alt="Programming Hub Certificate">
+      <div class="name-text">Prem Prakash</div>
+    </div>
+  </section>
+
+  <!-- Games Section -->
+  <section id="games" class="card">
+    <h2>Fun Online Games 🎮</h2>
+    <p>Here are some cool games for you to try!</p>
+
+    <div class="game-embed">
+      <h3>1. Dino Game 🦖</h3>
+      <iframe src="https://chromedino.com/" width="100%" height="400" frameborder="0"></iframe>
+    </div>
+
+    <div class="game-embed">
+      <h3>2. Flappy Bird 🐦</h3>
+      <iframe src="https://flappybird.io/" width="100%" height="500" frameborder="0"></iframe>
+    </div>
+
+    <div class="game-embed">
+      <h3>3. 2048 Puzzle 🔢</h3>
+      <iframe src="https://play2048.co/" width="100%" height="500" frameborder="0"></iframe>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Made with 💻 + 🎨 by Prem Prakash | For Ruchika 💖</p>
+    <p id="music-info">Background Music: "watching anime" by sakura Hz (CC BY-ND 3.0)</p>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop">⬆️</button>
+
+  <!-- Floating Music Player -->
+  <div class="music-player">
+    <audio id="bgMusic" loop>
+      <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/YwJZgsg5bStBfJgTRQIuKk7lFcT2yJEC1ZPAbAn9.mp3" type="audio/mpeg">
+    </audio>
+    <button id="musicToggle">▶️</button>
+  </div>
+
+  <!-- Surprise Popup -->
+  <div id="popup">
+    <h2>🌸 Surprise! 🌸</h2>
+    <p>Ruchika, you’re truly awesome! 💖</p>
+    <button onclick="document.getElementById('popup').style.display='none'">Close</button>
+  </div>
+
+  <script>
+    // Loader Fade Out
+    window.addEventListener("load", () => {
+      document.getElementById("loader").classList.add("fade-out");
+    });
+
+    // Quiz logic
+    document.getElementById('quizForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const vibe = e.target.vibe.value;
+      const drink = (e.target.drink.value || '').toLowerCase();
+      let score = 0;
+      if (vibe === 'Anime' || vibe === 'Coding') score++;
+      if (drink && drink !== 'coffee') score++;
+      document.getElementById('quiz-result').textContent =
+        score === 2 ? 'Perfect! You know me well 😎' : 'Nice try!';
+    });
+
+    // Back to Top Button
+    const backToTop = document.getElementById("backToTop");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        backToTop.style.display = "block";
+      } else {
+        backToTop.style.display = "none";
+      }
+    });
+    backToTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Music Player Toggle
+    const music = document.getElementById("bgMusic");
+    const musicToggle = document.getElementById("musicToggle");
+    let isPlaying = false;
+    musicToggle.addEventListener("click", () => {
+      if (isPlaying) {
+        music.pause();
+        musicToggle.textContent = "▶️";
+      } else {
+        music.play();
+        musicToggle.textContent = "⏸️";
+      }
+      isPlaying = !isPlaying;
+    });
+
+    // Cursor Particle Effect
+    const colors = ["#ec4899", "#8b5cf6", "#facc15", "#34d399"];
+    document.addEventListener("mousemove", (e) => {
+      const particle = document.createElement("div");
+      particle.className = "cursor-particle";
+      document.body.appendChild(particle);
+
+      particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      particle.style.left = `${e.pageX - 4}px`;
+      particle.style.top = `${e.pageY - 4}px`;
+
+      setTimeout(() => particle.remove(), 1000);
+    });
+
+    // Surprise Popup on Scroll Bottom
+    window.addEventListener("scroll", () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) {
+        document.getElementById("popup").style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
